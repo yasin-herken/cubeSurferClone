@@ -5,43 +5,30 @@ public class CubeController : MonoBehaviour
 {
     [SerializeField] private StackController stackController;
 
-    private RaycastHit hit;
-    private bool isStack = false;
     private Vector3 direction = Vector3.back;
+    private bool isStack = false;
     // Start is called before the first frame update
     void Start()
     {
         stackController = GameObject.FindObjectOfType<StackController>();
     }
-
-    // Update is called once per frame
-    void FixedUpdate()
+ 
+    private void OnTriggerEnter(Collider other)
     {
-        setCubeRayCast();
-    }
-
-    private void setCubeRayCast()
-    {
-        if(Physics.Raycast(transform.position, direction, out hit, 0.05f))
+        if(other.gameObject.tag == "cube")
         {
-
             if (!isStack)
             {
                 isStack = !isStack;
                 stackController.increaseBlockState(gameObject);
                 SetDirection();
             }
+        }
 
-            if (IsObstacleCube())
-            {
-                stackController.decreaseBlockState(gameObject);
-            }
-        } 
-    }
-
-    private bool IsObstacleCube()
-    {
-        return hit.transform.CompareTag("ObstacleCube");
+        if(other.gameObject.tag == "Obstacle")
+        {
+            stackController.decreaseBlockState(gameObject);
+        }
     }
 
     private void SetDirection()

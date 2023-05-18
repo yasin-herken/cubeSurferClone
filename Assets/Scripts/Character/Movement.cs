@@ -10,8 +10,6 @@ public class Movement : MonoBehaviour
 
     [SerializeField] private float horizontalMovementSpeed = 4f;
 
-    [SerializeField] private StackController stackController;
-
     [SerializeField] private Animator animator;
 
     private float newPositionX;
@@ -25,7 +23,6 @@ public class Movement : MonoBehaviour
     void Start()
     {
         inputController = GetComponent<InputController>();
-        stackController = GameObject.FindObjectOfType<StackController>();
     }
 
     // Update is called once per frame
@@ -55,18 +52,22 @@ public class Movement : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag== "ObstacleCube" && stackController.blockList.Count == 1)
+        Debug.Log(other.name);
+        if (other.gameObject.tag== "Obstacle")
         {
             //forwardMovementSpeed = 0f;
             //animator.Play("Dying");
             // animation call
-          
+            Debug.Log("Here");
+            Invoke("reset", 1f);
         }
+       
 
     }
+
     void reset()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);//menüye gönderiyor.
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
 }

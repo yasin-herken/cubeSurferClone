@@ -9,8 +9,6 @@ public class PlatformController : MonoBehaviour
     private bool passed = false;
     private void OnTriggerEnter(Collider other)
     {
-
-            Debug.Log(other.name);
             // If player is end of the road create new Environment
             if (other.tag == "Player")
             {

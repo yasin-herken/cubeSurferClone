@@ -14,8 +14,8 @@ public class StackController : MonoBehaviour
     }
 
     public void increaseBlockState(GameObject _gameObject) {
-        transform.position = new Vector3(transform.position.x, transform.position.y + 0.04f, transform.position.z);
-        _gameObject.transform.position = new Vector3(lastBlockObject.transform.position.x, lastBlockObject.transform.position.y - 0.04f, lastBlockObject.transform.position.z);
+        transform.position = new Vector3(transform.position.x, transform.position.y + 0.049889f, transform.position.z);
+        _gameObject.transform.position = new Vector3(lastBlockObject.transform.position.x, lastBlockObject.transform.position.y - 0.049889f, lastBlockObject.transform.position.z);
         _gameObject.transform.SetParent(transform);
         blockList.Add(_gameObject);
         UpdateLastBlockObject();
@@ -27,7 +27,7 @@ public class StackController : MonoBehaviour
         _gameObject.transform.parent = null;
         blockList.Remove(_gameObject);
         UpdateLastBlockObject();
-        Destroy(_gameObject, 3f);
+        Destroy(_gameObject, 1.5f);
     }
 
     private void UpdateLastBlockObject() {
