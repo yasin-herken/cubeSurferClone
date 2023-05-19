@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FinishLineController : MonoBehaviour
 {
@@ -11,24 +12,31 @@ public class FinishLineController : MonoBehaviour
     void Start()
     {
         gameController = GameController.FindObjectOfType<GameController>();
+        gameController.particleSystem.Clear();
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         // Animasyon will be added
         if(!passed)
         {
-            if (other.tag == "Player")
+            if (other.tag == "cube")
             {
                 passed = true;
                 gameController.increaseLevel();
-                for(int i=0;i<30;i++)
+                gameController.particleSystem.Stop();
+                if(gameController.particleSystem.isStopped)
                 {
-                    gameController.addCubes();
+                    gameController.particleSystem.Play();
                 }
+                Invoke("level2", 2f);
             }
         }
        
         
+    }
+    void level2()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }

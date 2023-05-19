@@ -52,14 +52,12 @@ public class Movement : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.name);
         if (other.gameObject.tag== "Obstacle")
         {
-            //forwardMovementSpeed = 0f;
-            //animator.Play("Dying");
+            forwardMovementSpeed = 0f;
+            animator.Play("Dying");
             // animation call
-            Debug.Log("Here");
-            Invoke("reset", 1f);
+            Invoke("reset", 4f);
         }
        
 

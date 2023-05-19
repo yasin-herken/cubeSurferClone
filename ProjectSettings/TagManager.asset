@@ -9,6 +9,8 @@ TagManager:
   - Road
   - nextEnvironment
   - prevEnvironment
+  - cube
+  - Obstacle
   layers:
   - Default
   - TransparentFX
