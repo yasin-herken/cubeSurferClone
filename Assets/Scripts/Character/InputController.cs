@@ -20,6 +20,6 @@ public class InputController : MonoBehaviour
 
     private void HandleCharacterInput()
     {
-        SetHorizontalValue(Input.GetAxis("Horizontal"));
+        SetHorizontalValue(Input.GetAxis("Mouse X"));
     }
 }
