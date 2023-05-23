@@ -9,13 +9,16 @@ public class IAPManager : MonoBehaviour
     private string diamond5 = "com.School.GemSurfer.diamond5";
     private string removeAds = "com.School.GemSurfer.removeAds";
 
-
     public void OnPurchaseComplete(Product product)
     {
         Debug.Log(product.definition.id);
         if(product.definition.id.Equals(removeAds))
         {
-            Debug.Log("");
+            //GameController.instance.setPrint();
+        } else if(product.definition.id.Equals(diamond5))
+        {
+            GameController.instance.setDiamond(GameController.instance.getDiamond() + 5);
+            GameController.instance.setPrint();
         }
     }
 

@@ -13,5 +13,9 @@ MonoBehaviour:
   m_Name: HMSIAPProductListSettings
   m_EditorClassIdentifier: 
   settings:
-    _keys: []
-    _values: []
+    _keys:
+    - com.School.GemSurfer.removeAds
+    - com.School.GemSurfer.diamond5
+    _values:
+    - NonConsumable
+    - Consumable

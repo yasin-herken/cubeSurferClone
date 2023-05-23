@@ -13,5 +13,7 @@ MonoBehaviour:
   m_Name: HMSAdsKitSettings
   m_EditorClassIdentifier: 
   settings:
-    _keys: []
-    _values: []
+    _keys:
+    - EnableInterstitialAd
+    _values:
+    - False
