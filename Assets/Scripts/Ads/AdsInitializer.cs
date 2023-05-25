@@ -1,121 +1,120 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using HmsPlugin;
+using HuaweiMobileServices.Ads;
 using UnityEngine;
 using UnityEngine.Advertisements;
 
-public class AdsInitializer : MonoBehaviour, IUnityAdsInitializationListener, IUnityAdsLoadListener, IUnityAdsShowListener
+public class AdsInitializer : MonoBehaviour
 {
-    public static AdsInitializer instance;
-    [SerializeField] string _androidGameId = "5284742";
-    string _gameId;
-    [SerializeField] bool _testMode = false;
+    private readonly string TAG = "[HMS] AdsDemoManager: ";
+    #region Singleton
 
-    private void Awake()
+    public static AdsInitializer Instance { get; private set; }
+    private void Singleton()
     {
-        if (instance == null)
+        if (Instance != null && Instance != this)
         {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else if (instance != this)
-        {
-            Destroy(gameObject);
-        }
-        if (Advertisement.isInitialized)
-        {
-            Debug.Log("Advertisement is initilialized");
-            LoadRewardedAd();
+            Destroy(this);
         }
         else
         {
-            InitializeAds();
+            Instance = this;
         }
     }
 
-    void InitializeAds()
+    #endregion
+
+    private void Awake()
     {
-        _gameId = _androidGameId;
-        Advertisement.Initialize(_gameId, _testMode, this);
+        Singleton();
     }
 
-    public void OnInitializationComplete()
+    private void Start()
     {
-        Debug.Log("Unity Ads initilization complete.");
-        LoadInerstitialAd();
-        LoadBannerAd();
+        HMSAdsKitManager.Instance.OnRewarded = OnRewarded;
+
+        HMSAdsKitManager.Instance.ConsentOnFail = OnConsentFail;
+        HMSAdsKitManager.Instance.ConsentOnSuccess = OnConsentSuccess;
+        HMSAdsKitManager.Instance.RequestConsentUpdate();
+
+
+        #region SetNonPersonalizedAd , SetRequestLocation
+
+        var builder = HwAds.RequestOptions.ToBuilder();
+
+        builder
+            .SetConsent("tcfString")
+            .SetNonPersonalizedAd((int)NonPersonalizedAd.ALLOW_ALL)
+            .Build();
+
+        bool requestLocation = true;
+        var requestOptions = builder.SetConsent("testConsent").SetRequestLocation(requestLocation).Build();
+
+        Debug.Log($"{TAG}RequestOptions NonPersonalizedAds:  {requestOptions.NonPersonalizedAd}");
+        Debug.Log($"{TAG}Consent: {requestOptions.Consent}");
+
+        #endregion
     }
 
-    public void OnInitializationFailed(UnityAdsInitializationError error, string message)
+    private void OnConsentFail(string desc)
     {
-        throw new System.NotImplementedException();
+        Debug.LogError($"{TAG}OnConsentFail:{desc}");
     }
 
-    public void LoadInerstitialAd()
+    private void OnConsentSuccess(ConsentStatus consentStatus, bool isNeedConsent, IList<AdProvider> adProviders)
     {
-        Advertisement.Load("Interstitial_Android", this);
-    }
-
-    public void LoadRewardedAd()
-    {
-        Advertisement.Load("Rewarded_Android", this);
-    }
-    public void OnUnityAdsAdLoaded(string placementId)
-    {
-        Advertisement.Show(placementId, this);
-    }
-
-    public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message)
-    {
-        Debug.Log($"Error showing Ad Unit {placementId}: {error.ToString()} - {message}");
-    }
-
-    public void OnUnityAdsShowFailure(string placementId, UnityAdsShowError error, string message)
-    {
-        Debug.Log("OnUnityAdsShowFailure");
-    }
-
-    public void OnUnityAdsShowStart(string placementId)
-    {
-        Debug.Log("OnUnityAdsShowStart");
-        Time.timeScale = 0;
-        Advertisement.Banner.Hide();
-
-    }
-
-    public void OnUnityAdsShowClick(string placementId)
-    {
-        Debug.Log("OnUnityAdsShowClick");
-    }
-
-    public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState)
-    {
-        Debug.Log("OnUnityAdsShowCompleted" + showCompletionState);
-        if (placementId.Equals("Rewarded_Android") && UnityAdsCompletionState.COMPLETED.Equals(showCompletionState))
+        Debug.Log($"{TAG}OnConsentSuccess consentStatus:{consentStatus} isNeedConsent:{isNeedConsent}");
+        foreach (var AdProvider in adProviders)
         {
-            Debug.Log("rewarded Player");
+            Debug.Log($"{TAG}OnConsentSuccess adproviders: Id:{AdProvider.Id} Name:{AdProvider.Name} PrivacyPolicyUrl:{AdProvider.PrivacyPolicyUrl} ServiceArea:{AdProvider.ServiceArea}");
         }
-        Time.timeScale = 1;
-        Advertisement.Banner.Show("Banner_Android");
     }
 
-    public void LoadBannerAd()
+    private void OnRewarded(Reward reward)
     {
-        Advertisement.Banner.SetPosition(BannerPosition.BOTTOM_CENTER);
-        Advertisement.Banner.Load("Banner_Android",
-            new BannerLoadOptions
-            {
-                loadCallback = OnBannerLoaded,
-                errorCallback = OnBannerError
-            });
+        Debug.Log($"{TAG}rewarded!");
     }
 
-    void OnBannerLoaded()
+    public void ShowBannerAd()
     {
-        Advertisement.Banner.Show("Banner_Android");
+        Debug.Log($"{TAG}ShowBannerAd");
+
+        HMSAdsKitManager.Instance.ShowBannerAd();
     }
 
-    void OnBannerError(string message)
+    public void HideBannerAd()
     {
+        Debug.Log($"{TAG}HideBannerAd");
 
+        HMSAdsKitManager.Instance.HideBannerAd();
     }
+
+    public void ShowRewardedAd()
+    {
+        Debug.Log($"{TAG}ShowRewardedAd");
+        HMSAdsKitManager.Instance.ShowRewardedAd();
+    }
+
+    public void ShowInterstitialAd()
+    {
+        Debug.Log($"{TAG}ShowInterstitialAd");
+        HMSAdsKitManager.Instance.ShowInterstitialAd();
+    }
+
+    public void ShowSplashImage()
+    {
+        Debug.Log($"{TAG}ShowSplashImage!");
+
+        HMSAdsKitManager.Instance.LoadSplashAd("testq6zq98hecj", SplashAd.SplashAdOrientation.PORTRAIT);
+    }
+
+    public void ShowSplashVideo()
+    {
+        Debug.Log($"{TAG}ShowSplashVideo!");
+
+        HMSAdsKitManager.Instance.LoadSplashAd("testd7c5cewoj6", SplashAd.SplashAdOrientation.PORTRAIT);
+    }
+
 }

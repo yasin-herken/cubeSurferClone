@@ -6,13 +6,11 @@ using UnityEngine.SceneManagement;
 public class FinishLineController : MonoBehaviour
 {
 
-    private GameController gameController;
     private bool passed = false;
     // Start is called before the first frame update
     void Start()
     {
-        gameController = GameController.FindObjectOfType<GameController>();
-        gameController.particleSystem.Clear();
+        GameController.Instance.particleSystem.Clear();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -23,20 +21,29 @@ public class FinishLineController : MonoBehaviour
             if (other.tag == "cube")
             {
                 passed = true;
-                gameController.increaseLevel();
-                gameController.particleSystem.Stop();
-                if(gameController.particleSystem.isStopped)
+                AdsInitializer.Instance.HideBannerAd();
+                GameController.Instance.increaseLevel();
+                
+                GameController.Instance.particleSystem.Stop();
+                if (GameController.Instance.particleSystem.isStopped)
                 {
-                    gameController.particleSystem.Play();
+                    GameController.Instance.particleSystem.Play();
                 }
-                Invoke("level2", 2f);
+                StartCoroutine(ExecuteAfterTime(2));
+                AdsInitializer.Instance.ShowBannerAd();
+                Invoke("newLevel", 2f);
             }
         }
-       
-        
     }
-    void level2()
+
+    void newLevel()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene(2);
+    }
+    IEnumerator ExecuteAfterTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        // Code to execute after the delay
     }
 }

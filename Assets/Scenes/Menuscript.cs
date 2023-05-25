@@ -6,11 +6,14 @@ using UnityEngine.SceneManagement;
 
 public class Menuscript : MonoBehaviour
 {
-    
-    public void PlayButton()
-      
+
+    private void Start()
     {
-          SceneManager.LoadScene(1);
+        AdsInitializer.Instance.ShowInterstitialAd();
+    }
+    public void PlayButton()
+    {
+       SceneManager.LoadScene(1);
     }
 
     public void QuitButton()

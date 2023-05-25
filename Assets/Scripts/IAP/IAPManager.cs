@@ -1,5 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using HmsPlugin;
+using HuaweiMobileServices.IAP;
+using HuaweiMobileServices.Utils;
 using UnityEngine;
 using UnityEngine.Purchasing;
 using UnityEngine.Purchasing.Extension;
@@ -9,24 +12,50 @@ public class IAPManager : MonoBehaviour
     private string diamond5 = "com.School.GemSurfer.diamond5";
     private string removeAds = "com.School.GemSurfer.removeAds";
 
-    public void OnPurchaseComplete(Product product)
+    public static IAPManager Instance { get; private set; }
+    private void Awake()
     {
-        Debug.Log(product.definition.id);
-        if(product.definition.id.Equals(removeAds))
+        if (Instance != null && Instance != this)
         {
-            //GameController.instance.setPrint();
-        } else if(product.definition.id.Equals(diamond5))
+            Destroy(this);
+            return;
+        }
+        Instance = this;
+    }
+    private void Start()
+    {
+        HMSIAPManager.Instance.InitializeIAP();
+        HMSIAPManager.Instance.OnBuyProductSuccess += OnBuyProductSuccess;
+
+        HMSIAPManager.Instance.OnInitializeIAPSuccess += OnInitializeIAPSuccess;
+      //  HMSIAPManager.Instance.OnInitializeIAPFailure += OnInitializeIAPFailure;
+    }
+
+
+    public void PurchaseProduct(string productID)
+    {
+        Debug.Log($"PurchaseProduct");
+        HMSIAPManager.Instance.PurchaseProduct(productID);
+    }
+
+  
+       private void OnInitializeIAPSuccess()
+    {
+        // IAP is ready
+        Debug.Log("Success");
+    }
+
+    private void OnBuyProductSuccess(PurchaseResultInfo obj)
+    {
+        Debug.Log($"OnBuyProductSuccess");
+
+        if (obj.InAppPurchaseData.ProductId == "removeAds")
         {
-            GameController.instance.setDiamond(GameController.instance.getDiamond() + 5);
-            GameController.instance.setPrint();
+            GameController.Instance.removeAds = true;
+        }
+        else if (obj.InAppPurchaseData.ProductId == "diamond5")
+        {
+            GameController.Instance.setDiamond(GameController.Instance.getDiamond() + 5);
         }
     }
-
-
-    public void OnPurchaseFailed(Product i, PurchaseFailureDescription p)
-    {
-        Debug.Log(i.definition.id + " failed because " + p);
-    }
-
-
 }

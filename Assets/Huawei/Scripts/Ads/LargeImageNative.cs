@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class LargeImageNative : MonoBehaviour
 {
-    [Header("Native Ad Unit ID")]
+    [Header("Native Ad Unit ID"), SerializeField]
     public string adUnitID = "testy63txaom86";
 
     [Header("Components")]

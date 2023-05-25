@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -28,8 +29,11 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        setCharacterMovementForward();
-        setCharacterHorizontalMovement();
+        if(GameController.Instance.gameState == GameController.GameState.playing)
+        {
+            setCharacterMovementForward();
+            setCharacterHorizontalMovement();
+        } 
     }
 
     private void setCharacterMovementForward()
@@ -55,17 +59,23 @@ public class Movement : MonoBehaviour
         if (other.gameObject.tag== "Obstacle")
         {
             forwardMovementSpeed = 0f;
-            animator.Play("Dying");
-            // animation call
-            Invoke("reset", 4f);
+            GameController.Instance.gameState = GameController.GameState.die;
+            AnimatorManager.Instance.setAnimator(AnimatorManager.AnimationState.Dying);
+            StartCoroutine(ExecuteAfterTime(2));
+            GameController.Instance.openShowPanel();  
         }
-       
-
     }
 
-    void reset()
+    IEnumerator ExecuteAfterTime(float time)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        yield return new WaitForSeconds(time);
+
+        // Code to execute after the delay
     }
+
+    //void reset()
+    //{
+    //    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    //}
 
 }
