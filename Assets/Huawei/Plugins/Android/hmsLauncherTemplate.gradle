@@ -21,6 +21,8 @@ dependencies {
 	
 	implementation 'com.huawei.hms:hianalytics:6.4.1.302'
 	
+	implementation 'com.huawei.agconnect:agconnect-auth:1.8.0.300'
+	
 	implementation 'com.huawei.hms:iap:6.4.0.301'
 	
 }
