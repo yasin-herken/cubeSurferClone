@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using HmsPlugin;
@@ -9,28 +10,105 @@ using UnityEngine.Purchasing.Extension;
 
 public class IAPManager : MonoBehaviour
 {
-    private string diamond5 = "com.School.GemSurfer.diamond5";
-    private string removeAds = "com.School.GemSurfer.removeAds";
+    private string diamond5 = "com.School.GemSurfer.huawei.diamond5";
+    private string removeAds = "com.School.GemSurfer.huawei.removeAds";
+
+    public static Action<string> IAPLog;
+
+    List<InAppPurchaseData> consumablePurchaseRecord = new List<InAppPurchaseData>();
+    List<InAppPurchaseData> activeNonConsumables = new List<InAppPurchaseData>();
+    List<InAppPurchaseData> activeSubscriptions = new List<InAppPurchaseData>();
+
+    #region Singleton
 
     public static IAPManager Instance { get; private set; }
-    private void Awake()
+    private void Singleton()
     {
         if (Instance != null && Instance != this)
         {
             Destroy(this);
-            return;
         }
-        Instance = this;
+        else
+        {
+            Instance = this;
+        }
     }
-    private void Start()
+
+    #endregion
+
+    #region Monobehaviour
+
+    private void OnEnable()
     {
-        HMSIAPManager.Instance.InitializeIAP();
         HMSIAPManager.Instance.OnBuyProductSuccess += OnBuyProductSuccess;
-
         HMSIAPManager.Instance.OnInitializeIAPSuccess += OnInitializeIAPSuccess;
-      //  HMSIAPManager.Instance.OnInitializeIAPFailure += OnInitializeIAPFailure;
+        HMSIAPManager.Instance.OnInitializeIAPFailure += OnInitializeIAPFailure;
+        HMSIAPManager.Instance.OnBuyProductFailure += OnBuyProductFailure;
     }
 
+    private void OnDisable()
+    {
+        HMSIAPManager.Instance.OnBuyProductSuccess -= OnBuyProductSuccess;
+        HMSIAPManager.Instance.OnInitializeIAPSuccess -= OnInitializeIAPSuccess;
+        HMSIAPManager.Instance.OnInitializeIAPFailure -= OnInitializeIAPFailure;
+        HMSIAPManager.Instance.OnBuyProductFailure -= OnBuyProductFailure;
+    }
+
+    void Awake()
+    {
+        Singleton();
+    }
+
+    void Start()
+    {
+        // Uncomment below if InitializeOnStart is not enabled in Huawei > Kit Settings > IAP tab.
+        HMSIAPManager.Instance.InitializeIAP();
+    }
+
+    #endregion
+
+
+    public void InitializeIAP()
+    {
+        Debug.Log($"InitializeIAP");
+
+        HMSIAPManager.Instance.InitializeIAP();
+    }
+
+    private void RestoreProducts()
+    {
+
+        HMSIAPManager.Instance.RestorePurchaseRecords((restoredProducts) =>
+        {
+            foreach (var item in restoredProducts.InAppPurchaseDataList)
+            {
+                if ((IAPProductType)item.Kind == IAPProductType.Consumable)
+                {
+                    Debug.Log($"Consumable: ProductId {item.ProductId} , SubValid {item.SubValid} , PurchaseToken {item.PurchaseToken} , OrderID  {item.OrderID}");
+                    consumablePurchaseRecord.Add(item);
+                }
+            }
+        });
+
+        HMSIAPManager.Instance.RestoreOwnedPurchases((restoredProducts) =>
+        {
+            foreach (var item in restoredProducts.InAppPurchaseDataList)
+            {
+                if ((IAPProductType)item.Kind == IAPProductType.Subscription)
+                {
+                    Debug.Log($"Subscription: ProductId {item.ProductId} , ExpirationDate {item.ExpirationDate} , AutoRenewing {item.AutoRenewing} , PurchaseToken {item.PurchaseToken} , OrderID {item.OrderID}");
+                    activeSubscriptions.Add(item);
+                }
+
+                else if ((IAPProductType)item.Kind == IAPProductType.NonConsumable)
+                {
+                    Debug.Log($"NonConsumable: ProductId {item.ProductId} , DaysLasted {item.DaysLasted} , SubValid {item.SubValid} , PurchaseToken {item.PurchaseToken} ,OrderID {item.OrderID}");
+                    activeNonConsumables.Add(item);
+                }
+            }
+        });
+
+    }
 
     public void PurchaseProduct(string productID)
     {
@@ -38,12 +116,7 @@ public class IAPManager : MonoBehaviour
         HMSIAPManager.Instance.PurchaseProduct(productID);
     }
 
-  
-       private void OnInitializeIAPSuccess()
-    {
-        // IAP is ready
-        Debug.Log("Success");
-    }
+    #region Callbacks
 
     private void OnBuyProductSuccess(PurchaseResultInfo obj)
     {
@@ -51,11 +124,35 @@ public class IAPManager : MonoBehaviour
 
         if (obj.InAppPurchaseData.ProductId == "removeAds")
         {
-            GameController.Instance.removeAds = true;
+            IAPLog?.Invoke("Ads Removed!");
         }
         else if (obj.InAppPurchaseData.ProductId == "diamond5")
         {
             GameController.Instance.setDiamond(GameController.Instance.getDiamond() + 5);
+            IAPLog?.Invoke("5 Diamond Purchased!");
+        }
+        else if (obj.InAppPurchaseData.ProductId == "premium")
+        {
+            IAPLog?.Invoke("premium subscribed!");
         }
     }
+
+    private void OnInitializeIAPFailure(HMSException obj)
+    {
+        IAPLog?.Invoke("IAP is not ready.");
+    }
+
+    private void OnInitializeIAPSuccess()
+    {
+        IAPLog?.Invoke("IAP is ready.");
+
+        RestoreProducts();
+    }
+
+    private void OnBuyProductFailure(int code)
+    {
+        IAPLog?.Invoke("Purchase Fail.");
+    }
+
+    #endregion
 }

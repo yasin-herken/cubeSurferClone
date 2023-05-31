@@ -31,17 +31,17 @@
 		"client_id":"1158270860117691904",
 		"client_secret":"26A248851B704A12192EE04F0358F7883CDACA39BAC226AE8F47826C6F4D3CEA",
 		"project_id":"388421841221478621",
-		"app_id":"108313271",
+		"app_id":"108402421",
 		"api_key":"DAEDAJ0mSol42s0xbPlGojyiRGKNxFwqGsQAlfBHWgyQs+24FTsfTswkGpJzH8qFo/REFoM2Z1p1TEBrYIX6ryS17Qp6iUMeNvqZUA==",
-		"package_name":"com.School.GemSurfer"
+		"package_name":"com.School.GemSurfer.huawei"
 	},
 	"oauth_client":{
-		"client_id":"108313271",
+		"client_id":"108402421",
 		"client_type":1
 	},
 	"app_info":{
-		"app_id":"108313271",
-		"package_name":"com.School.GemSurfer"
+		"app_id":"108402421",
+		"package_name":"com.School.GemSurfer.huawei"
 	},
 	"service":{
 		"analytics":{
@@ -79,17 +79,17 @@
 	"configuration_version":"3.0",
 	"appInfos":[
 		{
-			"package_name":"com.School.GemSurfer",
+			"package_name":"com.School.GemSurfer.huawei",
 			"client":{
-				"app_id":"108313271"
+				"app_id":"108402421"
 			},
 			"app_info":{
-				"package_name":"com.School.GemSurfer",
-				"app_id":"108313271"
+				"package_name":"com.School.GemSurfer.huawei",
+				"app_id":"108402421"
 			},
 			"oauth_client":{
 				"client_type":1,
-				"client_id":"108313271"
+				"client_id":"108402421"
 			}
 		}
 	]

@@ -9,14 +9,11 @@ public class DiamondCollector : MonoBehaviour
     public UnityEvent<DiamondCollector> OnDiamondCollected;
 
     public void DiamondCollected()
-    {
-        NumberOfDiamonds++;
+    {   
+        GameController.Instance.setDiamond(GameController.Instance.getDiamond() + 1);
+        NumberOfDiamonds = GameController.Instance.getDiamond();
         OnDiamondCollected.Invoke(this);
         //Debug.Log(NumberOfDiamonds);
     
     }
-
-
-
-
 }

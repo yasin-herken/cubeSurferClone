@@ -19,7 +19,7 @@ public class GameController : MonoBehaviour
     public TMP_Text diamondTxt;
     private int diamond = 0;
     public bool showPanelControl= false;
-    public bool removeAds = false;
+    public bool RemoveAds { get; set; }
     public static GameController Instance { get; private set; }
 
     void OnEnable()
@@ -53,7 +53,6 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         AnimatorManager.Instance.setAnimator(AnimatorManager.AnimationState.Idle);
-        AdsInitializer.Instance.ShowInterstitialAd();
         AnimatorManager.Instance.setAnimator(AnimatorManager.AnimationState.Running);
         gameState = GameState.playing;
     }

@@ -80,7 +80,6 @@ public class AdsInitializer : MonoBehaviour
     public void ShowBannerAd()
     {
         Debug.Log($"{TAG}ShowBannerAd");
-
         HMSAdsKitManager.Instance.ShowBannerAd();
     }
 
@@ -100,7 +99,7 @@ public class AdsInitializer : MonoBehaviour
     public void ShowInterstitialAd()
     {
         Debug.Log($"{TAG}ShowInterstitialAd");
-        HMSAdsKitManager.Instance.ShowInterstitialAd();
+           HMSAdsKitManager.Instance.ShowInterstitialAd();
     }
 
     public void ShowSplashImage()

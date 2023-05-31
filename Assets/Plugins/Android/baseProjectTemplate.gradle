@@ -5,6 +5,7 @@ allprojects {
         repositories {**ARTIFACTORYREPOSITORY**
             google()
             jcenter()
+            maven { url 'https://developer.huawei.com/repo/' }
         }
 
         dependencies {
@@ -23,6 +24,7 @@ allprojects {
         flatDir {
             dirs "${project(':unityLibrary').projectDir}/libs"
         }
+        maven { url 'https://developer.huawei.com/repo/' }
     }
 }
 

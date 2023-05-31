@@ -9,7 +9,7 @@ public class Menuscript : MonoBehaviour
 
     private void Start()
     {
-        AdsInitializer.Instance.ShowInterstitialAd();
+       // AdsInitializer.Instance.ShowInterstitialAd();
     }
     public void PlayButton()
     {

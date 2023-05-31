@@ -19,9 +19,21 @@ MonoBehaviour:
     - EnableBannerAd
     - EnableRewardedAd
     - EnableSplashAd
+    - ShowBannerOnLoad
+    - BannerAdID
+    - SplashAdID
+    - RewardedAdID
+    - InterstitialAdID
+    - BannerRefreshInterval
     _values:
     - True
     - False
     - True
     - True
     - True
+    - False
+    - j9ep7sndoo
+    - g0uh62kp6b
+    - q2hu9tk38r
+    - y1rytbyoyo
+    - 60

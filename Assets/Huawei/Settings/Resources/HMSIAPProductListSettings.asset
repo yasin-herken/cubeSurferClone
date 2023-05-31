@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings:
     _keys:
-    - com.School.GemSurfer.removeAds
-    - com.School.GemSurfer.diamond5
+    - com.School.GemSurfer.huawei.diamond5
+    - com.School.GemSurfer.huawei.removeAds
     _values:
-    - NonConsumable
     - Consumable
+    - NonConsumable

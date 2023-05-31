@@ -8,6 +8,7 @@ public class FinishLineController : MonoBehaviour
 
     private bool passed = false;
     // Start is called before the first frame update
+
     void Start()
     {
         GameController.Instance.particleSystem.Clear();
@@ -21,7 +22,10 @@ public class FinishLineController : MonoBehaviour
             if (other.tag == "cube")
             {
                 passed = true;
-                AdsInitializer.Instance.HideBannerAd();
+                if(!GameController.Instance.RemoveAds)
+                {
+                    AdsInitializer.Instance.HideBannerAd();
+                }
                 GameController.Instance.increaseLevel();
                 
                 GameController.Instance.particleSystem.Stop();
@@ -30,7 +34,11 @@ public class FinishLineController : MonoBehaviour
                     GameController.Instance.particleSystem.Play();
                 }
                 StartCoroutine(ExecuteAfterTime(2));
-                AdsInitializer.Instance.ShowBannerAd();
+                if (!GameController.Instance.RemoveAds)
+                {
+                    AdsInitializer.Instance.ShowBannerAd();
+                    AdsInitializer.Instance.ShowInterstitialAd();
+                }
                 Invoke("newLevel", 2f);
             }
         }
@@ -43,7 +51,5 @@ public class FinishLineController : MonoBehaviour
     IEnumerator ExecuteAfterTime(float time)
     {
         yield return new WaitForSeconds(time);
-
-        // Code to execute after the delay
     }
 }

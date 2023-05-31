@@ -33,7 +33,13 @@ public class Movement : MonoBehaviour
         {
             setCharacterMovementForward();
             setCharacterHorizontalMovement();
-        } 
+            if (Input.GetKey("escape"))
+            {
+                GameController.Instance.gameState = GameController.GameState.idle;
+                GameController.Instance.openShowPanel();
+
+            }
+        }
     }
 
     private void setCharacterMovementForward()

@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class Diamond : MonoBehaviour
 {
-   private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         DiamondCollector diamondCollector = other.GetComponent<DiamondCollector>();
-        if(diamondCollector!= null)
-        { 
-        
-            diamondCollector.DiamondCollected();       
-            gameObject.SetActive(false);
+        if(other.tag == "cube")
+        {
+            if (diamondCollector != null)
+            {
+                diamondCollector.DiamondCollected();
+                gameObject.SetActive(false);
+            }
         }
-
      }
 }
